@@ -1,5 +1,7 @@
+Use this for adding cogs brother
+
+```
 import discord
-from discord.ext import commands
 
 
 class Greetings(commands.Cog):  # create a class for our cog that inherits from commands.Cog
@@ -18,3 +20,4 @@ class Greetings(commands.Cog):  # create a class for our cog that inherits from 
 
 def setup(bot):  # this is called by Pycord to setup the cog
     bot.add_cog(Greetings(bot))  # add the cog to the bot
+```
