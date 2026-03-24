@@ -12,6 +12,8 @@ class Error_handler(commands.Cog):
             await ctx.respond("Command on cooldown.")
         elif isinstance(error, commands.NotOwner):
             await ctx.respond("Owner only command")
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.respond(error)
         else:
             try:
                 await ctx.respond(error)
