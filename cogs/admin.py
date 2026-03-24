@@ -1,5 +1,7 @@
 import discord
 from datetime import datetime, timedelta, timezone
+
+from discord import Forbidden
 from discord.ext import commands
 
 
@@ -14,6 +16,8 @@ class Example(commands.Cog):
 		if channel == None:
 			channel = ctx.channel
 
+		await ctx.trigger_typing()
+
 		now = datetime.now(timezone.utc)
 		cutoff = now - timedelta(days=14)
 
@@ -24,6 +28,20 @@ class Example(commands.Cog):
 			else: break
 		await channel.delete_messages(msgs)
 		await ctx.respond(f"Deleted {len(msgs)} messages", delete_after=2)
+
+	@admingroup.command()
+	async def raname_all(self, ctx: discord.ApplicationContext, new_name: str):
+		await ctx.trigger_typing()
+		membersList = ""
+		for u in ctx.guild.members:
+			try:
+				await u.edit(nick=new_name)
+				membersList += f"Changed `{u.name}` to `{u.nick}`\n"
+			except Forbidden as err:
+				membersList += f"Failed to change `{u.name}` with `{err}`\n"
+
+		await ctx.respond(membersList)
+
 
 
 def setup(bot):

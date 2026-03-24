@@ -14,6 +14,8 @@ class Error_handler(commands.Cog):
             await ctx.respond("Owner only command")
         elif isinstance(error, commands.MissingPermissions):
             await ctx.respond(error)
+        elif isinstance(error, discord.Forbidden):
+            await ctx.respond(error)
         else:
             try:
                 await ctx.respond(error)

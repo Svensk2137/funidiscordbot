@@ -5,7 +5,7 @@ import os
 
 load_dotenv() # DISCORD_TOKEN
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-DEBUG_GUILDS = [os.getenv("DEBUG_GUILDS"),os.getenv("JAGAD_GUILD")]
+DEBUG_GUILDS = [os.getenv("DEBUG_GUILDS"),os.getenv("FRIEND_GUILD")]
 OWNER_ID = int(os.getenv("OWNER_ID"))
 
 intents = discord.Intents.default()
