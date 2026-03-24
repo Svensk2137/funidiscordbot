@@ -34,33 +34,21 @@ class Example(commands.Cog):
 
 	@renaming.command(name="set_all")
 	async def raname_all(self, ctx: discord.ApplicationContext, new_name: str):
-		await ctx.trigger_typing()
-		message = "Renaming...\n"
-		msg = await ctx.respond(f"```{message}```")
+		await ctx.defer()
 		for u in ctx.guild.members:
 			try:
 				await u.edit(nick=new_name)
-				message += f"Changed `{u.name}` to `{u.nick}`\n"
-			except Forbidden as err:
-				message += f"Failed to change `{u.name}` with `{err}`\n"
-			await msg.edit(content=f"```{message}```")
-		message += "Finished"
-		await msg.edit(content=f"```{message}```")
+			except Forbidden as err: pass
+		await ctx.respond("Finished", delete_after=2)
 
 	@renaming.command(name="reset_all")
 	async def rename_reset_all(self, ctx: discord.ApplicationContext):
-		await ctx.trigger_typing()
-		message = "Renaming...\n"
-		msg = await ctx.respond(f"```{message}```")
+		await ctx.defer()
 		for u in ctx.guild.members:
 			try:
 				await u.edit(nick=None)
-				message += f"Reset nickname for `{u.name}`\n"
-			except Forbidden as err:
-				message += f"Failed to reset nickname for `{u.name}`\n"
-			await msg.edit(content=f"```{message}```")
-		message += "Finished"
-		await msg.edit(content=f"```{message}```")
+			except Forbidden as err: pass
+		await ctx.respond("Finished", delete_after=2)
 
 	@discord.user_command(name="Inform Israel")
 	async def inform_israel(self, ctx: discord.ApplicationContext, user: discord.Member):
