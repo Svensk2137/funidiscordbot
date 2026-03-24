@@ -45,10 +45,9 @@ async def reload_cogs(ctx: discord.ApplicationContext): # Commands dont work aft
 			try:
 				client.reload_extension(f"cogs.{file[:-3]}")
 				message += f"Reload cogs.{file[:-3]}    Success\n"
-				await msg.edit(content=f"```{message}```")
 			except:
 				message += f"Reload cogs.{file[:-3]}    Fail\n"
-				await msg.edit(content=f"```{message}```")
+			await msg.edit(content=f"```{message}```")
 	message += "Finished"
 	await msg.edit(content=f"```{message}```")
 

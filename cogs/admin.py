@@ -1,3 +1,5 @@
+from os import name
+
 import discord
 from datetime import datetime, timedelta, timezone
 
@@ -10,6 +12,7 @@ class Example(commands.Cog):
 		self.bot = bot
 
 	admingroup = discord.SlashCommandGroup("admin", "Some admin commands", default_member_permissions=discord.Permissions(administrator=True))
+	renaming = admingroup.create_subgroup("rename", "Renaming shit :D")
 
 	@admingroup.command()
 	async def bulk_delete(self, ctx: discord.ApplicationContext, channel: discord.TextChannel = None):
@@ -29,19 +32,35 @@ class Example(commands.Cog):
 		await channel.delete_messages(msgs)
 		await ctx.respond(f"Deleted {len(msgs)} messages", delete_after=2)
 
-	@admingroup.command()
+	@renaming.command(name="set_all")
 	async def raname_all(self, ctx: discord.ApplicationContext, new_name: str):
 		await ctx.trigger_typing()
-		membersList = ""
+		message = "Renaming...\n"
+		msg = await ctx.respond(f"```{message}```")
 		for u in ctx.guild.members:
 			try:
 				await u.edit(nick=new_name)
-				membersList += f"Changed `{u.name}` to `{u.nick}`\n"
+				message += f"Changed `{u.name}` to `{u.nick}`\n"
 			except Forbidden as err:
-				membersList += f"Failed to change `{u.name}` with `{err}`\n"
+				message += f"Failed to change `{u.name}` with `{err}`\n"
+			await msg.edit(content=f"```{message}```")
+		message += "Finished"
+		await msg.edit(content=f"```{message}```")
 
-		await ctx.respond(membersList)
-
+	@renaming.command(name="reset_all")
+	async def rename_reset_all(self, ctx: discord.ApplicationContext):
+		await ctx.trigger_typing()
+		message = "Renaming...\n"
+		msg = await ctx.respond(f"```{message}```")
+		for u in ctx.guild.members:
+			try:
+				await u.edit(nick=None)
+				message += f"Reset nickname for `{u.name}`\n"
+			except Forbidden as err:
+				message += f"Failed to reset nickname for `{u.name}`\n"
+			await msg.edit(content=f"```{message}```")
+		message += "Finished"
+		await msg.edit(content=f"```{message}```")
 
 
 def setup(bot):
