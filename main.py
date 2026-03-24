@@ -1,17 +1,30 @@
+from discord.ext.commands import is_owner
 from dotenv import load_dotenv
 import discord
-from discord import application_command
 import os
 
 load_dotenv() # DISCORD_TOKEN
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DEBUG_GUILDS = [os.getenv("DEBUG_GUILDS"),os.getenv("JAGAD_GUILD")]
+OWNER_ID = int(os.getenv("OWNER_ID"))
 
-client = discord.Bot(debug_guilds=DEBUG_GUILDS)
+intents = discord.Intents.default()
+intents.members = True
+client = discord.Bot(intents=intents, debug_guilds=DEBUG_GUILDS, owner_id=OWNER_ID)
 
+try:
+	client.load_extension("error_handler")
+	print("Loaded Error Handler")
+except Exception as err:
+	raise err
 
 for file in os.listdir("cogs"):
 	if file.endswith(".py"):
-		client.load_extension(f"cogs.{file[:-3]}")
+		try:
+			client.load_extension(f"cogs.{file[:-3]}")
+			print(f"Loaded cogs.{file[:-3]}")
+		except Exception as err:
+			raise err
 
 @client.event
 async def on_ready():
@@ -22,6 +35,7 @@ async def ping(ctx: discord.ApplicationContext):
 	await ctx.respond(f"Latency is {client.latency}")
 
 @client.slash_command()
+@is_owner()
 async def reload_cogs(ctx: discord.ApplicationContext): # Commands dont work after reload, idk
 	message = "Reloading cogs...\n"
 	msg = await ctx.respond(f"```{message}```")
@@ -37,4 +51,4 @@ async def reload_cogs(ctx: discord.ApplicationContext): # Commands dont work aft
 	message += "Finished"
 	await msg.edit(content=f"```{message}```")
 
-client.run(os.getenv("DISCORD_TOKEN"))
+client.run(DISCORD_TOKEN)
