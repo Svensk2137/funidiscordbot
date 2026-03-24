@@ -62,6 +62,13 @@ class Example(commands.Cog):
 		message += "Finished"
 		await msg.edit(content=f"```{message}```")
 
+	@discord.user_command(name="Inform Israel")
+	async def inform_israel(self, ctx: discord.ApplicationContext, user: discord.Member):
+		await user.timeout(datetime.now(timezone.utc) + timedelta(days=5))
+		namefortheloveofwhatsholypleasejustdonterrorfornoreason = user.nick
+		if namefortheloveofwhatsholypleasejustdonterrorfornoreason is None:
+			namefortheloveofwhatsholypleasejustdonterrorfornoreason = user.name
+		await ctx.respond(f"Israel has been informed on {namefortheloveofwhatsholypleasejustdonterrorfornoreason} antisemitism")
 
 def setup(bot):
 	bot.add_cog(Example(bot))
