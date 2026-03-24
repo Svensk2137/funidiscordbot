@@ -1,4 +1,4 @@
-import discord
+import discord, os
 from discord.ext import commands
 
 
@@ -11,6 +11,10 @@ class Gangshit(commands.Cog):  # create a class for our cog that inherits from c
     @discord.slash_command()  # we can also add application commands
     async def list_guilds(self, ctx):
         await ctx.respond(self.bot.guilds)
+
+    @discord.slash_command()
+    async def get_env(self, ctx):
+        await ctx.respond(os.getenv("DEBUG_GUILDS"))
 
 def setup(bot):  # this is called by Pycord to setup the cog
     bot.add_cog(Gangshit(bot))  # add the cog to the bot

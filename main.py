@@ -4,7 +4,7 @@ from discord import application_command
 import os
 
 load_dotenv() # DISCORD_TOKEN
-DEBUG_GUILDS = [os.getenv("DEBUG_GUILDS")]
+DEBUG_GUILDS = [os.getenv("DEBUG_GUILDS"),os.getenv("JAGAD_GUILD")]
 
 client = discord.Bot(debug_guilds=DEBUG_GUILDS)
 
@@ -22,7 +22,7 @@ async def ping(ctx: discord.ApplicationContext):
 	await ctx.respond(f"Latency is {client.latency}")
 
 @client.slash_command()
-async def reload_cogs(ctx: discord.ApplicationContext):
+async def reload_cogs(ctx: discord.ApplicationContext): # Commands dont work after reload, idk
 	message = "Reloading cogs...\n"
 	msg = await ctx.respond(f"```{message}```")
 	for file in os.listdir("cogs"):
