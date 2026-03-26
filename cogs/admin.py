@@ -1,11 +1,10 @@
-from os import name
-
 import discord
 from datetime import datetime, timedelta, timezone
 
 from discord import Forbidden
 from discord.ext import commands
 
+# Some admin commands
 
 class Example(commands.Cog):
 	def __init__(self, bot):
@@ -15,7 +14,7 @@ class Example(commands.Cog):
 	renaming = admingroup.create_subgroup("rename", "Renaming shit :D")
 
 	@admingroup.command()
-	async def bulk_delete(self, ctx: discord.ApplicationContext, channel: discord.TextChannel = None):
+	async def bulk_delete(self, ctx: discord.ApplicationContext, amount: int = 100, channel: discord.TextChannel = None):
 		if channel == None:
 			channel = ctx.channel
 
@@ -25,7 +24,7 @@ class Example(commands.Cog):
 		cutoff = now - timedelta(days=14)
 
 		msgs = []
-		async for m in channel.history(limit=100):
+		async for m in channel.history(limit=amount):
 			if m.created_at >= cutoff:
 				msgs.append(m)
 			else: break
@@ -57,6 +56,28 @@ class Example(commands.Cog):
 		if namefortheloveofwhatsholypleasejustdonterrorfornoreason is None:
 			namefortheloveofwhatsholypleasejustdonterrorfornoreason = user.name
 		await ctx.respond(f"Israel has been informed on {namefortheloveofwhatsholypleasejustdonterrorfornoreason} antisemitism")
+
+	@admingroup.command()
+	async def make_pc_lagger_channel(self, ctx: discord.ApplicationContext, channel_name: str = None):
+		await ctx.defer()
+		channel = ctx.channel
+		found_channel = False
+		message = "Zoom out"
+		if channel_name is not None:
+			for c in ctx.guild.channels:
+				if c.name == channel_name:
+					channel = ctx.guild.get_channel(c.id)
+					found_channel = True
+					break
+
+			if not found_channel:
+				channel = await ctx.guild.create_text_channel(channel_name)
+
+			message += f" in {channel.mention}"
+
+		for i in range(200):
+			await channel.send("-# 🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾🇨🇰🇫🇰🇦🇺🇲🇸🇳🇿🇵🇳🇬🇸🇸🇭🇦🇨🇹🇦🇭🇲🇹🇨🇦🇮🇻🇬🇰🇾")
+		await ctx.respond(message)
 
 def setup(bot):
 	bot.add_cog(Example(bot))

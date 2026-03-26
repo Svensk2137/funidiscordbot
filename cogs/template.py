@@ -1,6 +1,3 @@
-Use this for adding cogs brother
-
-```
 import discord
 from discord.ext import commands
 
@@ -11,9 +8,8 @@ class Example(commands.Cog):
 
     @commands.slash_command()
     async def hello(self, ctx: discord.ApplicationContext):
-        await ctx.respond("Hi, this is a slash command from a cog!")
+        await ctx.respond("Hi, this is a slash command from a template cog!")
 
 
 def setup(bot):
     bot.add_cog(Example(bot))
-```

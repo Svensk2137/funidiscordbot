@@ -20,11 +20,12 @@ except Exception as err:
 
 for file in os.listdir("cogs"):
 	if file.endswith(".py"):
-		try:
-			client.load_extension(f"cogs.{file[:-3]}")
-			print(f"Loaded cogs.{file[:-3]}")
-		except Exception as err:
-			raise err
+		if not file.startswith("template"):
+			try:
+				client.load_extension(f"cogs.{file[:-3]}")
+				print(f"Loaded cogs.{file[:-3]}")
+			except Exception as err:
+				raise err
 
 @client.event
 async def on_ready():
