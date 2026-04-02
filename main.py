@@ -37,19 +37,22 @@ async def ping(ctx: discord.ApplicationContext):
 
 @client.slash_command()
 @is_owner()
-async def reload_cogs(ctx: discord.ApplicationContext): # Commands dont work after reload, idk
+async def reload_cogs(ctx: discord.ApplicationContext):
 	await ctx.trigger_typing()
 	message = "Reloading cogs...\n"
+	print(message)
 	msg = await ctx.respond(f"```{message}```")
 	for file in os.listdir("cogs"):
 		if file.endswith(".py"):
-			try:
-				client.reload_extension(f"cogs.{file[:-3]}")
-				message += f"Reload cogs.{file[:-3]}    Success\n"
-			except:
-				message += f"Reload cogs.{file[:-3]}    Fail\n"
-			await msg.edit(content=f"```{message}```")
+			if not file.startswith("template"):
+				try:
+					client.reload_extension(f"cogs.{file[:-3]}")
+					message += f"Reload cogs.{file[:-3]}    Success\n"
+				except:
+					message += f"Reload cogs.{file[:-3]}    Fail\n"
+				await msg.edit(content=f"```{message}```")
 	message += "Finished"
+	await client.sync_commands()
 	await msg.edit(content=f"```{message}```")
 
 client.run(DISCORD_TOKEN)

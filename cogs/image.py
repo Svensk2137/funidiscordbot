@@ -16,12 +16,21 @@ class ImageMagick(commands.Cog):
     async def _get_image_data(self, ctx: discord.ApplicationContext, file: discord.Attachment = None, url: str = None):
         """
         Returns tuple (image_bytes, filename) or (None, None) if nothing found.
+
+        # Code snippet for getting:
+        image_data, filename = await self._get_image_data(ctx, file=file, url=url)
+        if image_data is None:
+            await ctx.respond("No image to manipulate")
+            return
+
         """
+        # if file is attached
         if file is not None:
             image_data = await file.read()
             filename = file.filename
             return image_data, filename
 
+        # if url is used
         if url is not None:
             image_data = requests.get(url).content
             filename = url + ".jpg"
@@ -47,17 +56,31 @@ class ImageMagick(commands.Cog):
         return image_data, filename
 
     @image.command()
-    async def resize(self, ctx: discord.ApplicationContext, scale: float, file: discord.Attachment = None, url: str = None):
+    async def scale(self, ctx: discord.ApplicationContext, scale: float, file: discord.Attachment = None, url: str = None):
         await ctx.defer()
         image_data, filename = await self._get_image_data(ctx, file=file, url=url)
         if image_data is None:
-            await ctx.respond("Nothin")
+            await ctx.respond("No image to manipulate")
             return
 
         with Image(blob=image_data) as i:
             i.resize(int(i.width * scale), int(i.height * scale))
             processed_bytes = i.make_blob()
-            await ctx.respond(file=discord.File(io.BytesIO(processed_bytes), filename=f"resized-{filename}"))
+            await ctx.respond(file=discord.File(io.BytesIO(processed_bytes), filename=f"scaled-{filename}"), content=f"File scaled by {scale}")
+
+    @image.command()
+    async def rotate(self, ctx: discord.ApplicationContext, rotation: int, file: discord.Attachment = None, url: str = None):
+        await ctx.defer()
+        image_data, filename = await self._get_image_data(ctx, file=file, url=url)
+        if image_data is None:
+            await ctx.respond("No image to manipulate")
+            return
+
+        with Image(blob=image_data) as i:
+            i.rotate(rotation)
+            processed_bytes = i.make_blob()
+            await ctx.respond(file=discord.File(io.BytesIO(processed_bytes), filename=f"rotated-{filename}"), content=f"File rotated by {rotation}")
+
 
 def setup(bot):
     bot.add_cog(ImageMagick(bot))

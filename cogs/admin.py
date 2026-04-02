@@ -1,6 +1,7 @@
 import discord
 from datetime import datetime, timedelta, timezone
-
+import json
+from pathlib import Path
 from discord import Forbidden
 from discord.ext import commands
 
@@ -30,6 +31,18 @@ class Example(commands.Cog):
 			else: break
 		await channel.delete_messages(msgs)
 		await ctx.respond(f"Deleted {len(msgs)} messages", delete_after=2)
+
+	@admingroup.command()
+	async def goon_leaderboard(self, ctx: discord.ApplicationContext):
+		await ctx.defer()
+		json_path = Path("./gooning_leaderboards.json")
+		if json_path.exists():
+			with json_path.open("r") as f:
+				leaderboard = json.load(f)
+		else:
+			leaderboard = {}
+
+		await ctx.respond(leaderboard)
 
 	@renaming.command(name="set_all")
 	async def raname_all(self, ctx: discord.ApplicationContext, new_name: str):
